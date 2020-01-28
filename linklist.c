@@ -8,61 +8,81 @@ struct Book
 	int id;
 };	
 
-struct Node {
+struct Node
+{
 	struct Book data;
 	struct Node *nextNode;
 };
 
-void PrintBook(struct Book *bookptr)
+void PrintAllNodes(struct Node *node_ptr)
 {
-	printf("Name: %s \n",bookptr->title);
-	printf("Book ID: %d \n",bookptr->id);
+    while(node_ptr!=NULL)
+    {
+    	printf("%s / ",node_ptr->data.title);
+    	printf("ID: %d \n",node_ptr->data.id);
+    	node_ptr = node_ptr->nextNode;
+    }
 }
 
-struct Node* GetBook()
-{	
-	static int bootid=1;
-	struct Node *node = malloc(sizeof(struct Node));
-	/////////////////////////////////	
-	strcpy(node->data.title,"Name 1");
-	node->data.id=bookid++;
-	/////////////////////////////////
-	//node->nextNode=NULL;
-	return &node;
+struct Node* AddNode()
+{
+    static int node_id = 1;
+    struct Node *node_ptr = (struct Node*)malloc(sizeof(struct Node));
+    /////////// inseart data in node ////////////
+    strcpy(node_ptr->data.title , "New Book");
+    node_ptr->data.id = node_id++;
+    node_ptr->nextNode = NULL;
+    /////////// -------------------- ////////////
+    return node_ptr;
+}
+
+struct Node* ReverseNodes(struct Node *head_ptr)
+{
+  struct Node *curr_ptr; // = malloc (sizeof(struct Node)); 
+  
+  if (head_ptr == NULL || head_ptr->nextNode == NULL) 
+  {
+    return head_ptr;
+  }
+  //temp_ptr->nextNode = curr_ptr->nextNode;
+  //ReverseNodes(curr_ptr->nextNode);
+  //curr_ptr = temp_ptr->nextNode;
+  //curr_ptr->nextNode = temp_ptr;
+  struct Node *temp_ptr = ReverseNodes(head_ptr->nextNode);
+  curr_ptr = head_ptr->nextNode;
+  curr_ptr->nextNode = head_ptr;
+  head_ptr->nextNode=NULL;
+  
+  return temp_ptr;
 }
 
 int main()
 {
-	struct Node *head=NULL;
-	struct Node *curr=NULL;
-	int count=0;
-		
-	head=curr;
-	curr->nextMode=GetBook();
-	count++;
-	curr=curr->nextNode;
+	struct Node *HEAD=NULL;
+	struct Node *CURR = malloc (sizeof(struct Node));
+	int node_count=1;
 
-	curr->nextNode=GetBook();
-	count++;
-	curr=curr->nextNode;
+    HEAD = CURR;
+    for(int i=0;i<10;i++)
+    {
+        CURR->nextNode=AddNode();
+        node_count++;
+        CURR  = CURR->nextNode;        
+    }
 
-	curr->nextNode=GetBook();
-	count++;
-	curr=curr->nextNode;
-
-	curr=GetBook();
-	count++;
-	c
-	for(int i=0;i<5000;i++)
-	{
-		curr->nextNode=GetBook();
-		count++;
-		curr=curr->nextNode;
-	}
-	for(int i=0;i<count;i++)
-	{
-		head=curr-nextNext;
-		free(head);
-	}
+    PrintAllNodes(HEAD);
+    printf("\n\n Reverse Order \n");
+    HEAD = ReverseNodes(HEAD);
+    //HEAD = reverse_recursive(HEAD);
+    PrintAllNodes((HEAD));
+    
+    for(int i=0;i<node_count;i++)
+    {
+        if(CURR->nextNode!=NULL)
+        {
+            HEAD=CURR->nextNode;
+            free(CURR);
+        }
+    }
 	return 0;
 }
